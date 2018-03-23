@@ -2,8 +2,6 @@
 
 # Tic Tac Toe implementation in bash
 # Author: Dariusz Rzepka <rzepkadarek@gmail.com>
-# TODO:
-# * check if input position is correct
 
 
 BOARD=(" " " " " " " " " " " " " " " " " ")
@@ -28,7 +26,7 @@ function print_board {
 }
 
 function ask_next_position {
-    read -p "Select next position for \"${PLAYER}\"? " INPUT
+    read -p "Select next position for player \"${PLAYER}\"? " INPUT
 }
 
 
@@ -37,9 +35,14 @@ function read_next_position {
   while [ "${IS_NEXT_POSITION_CORRECT}" -eq "0" ]
   do
     ask_next_position
-    # TODO: check if position is correct
-    IS_NEXT_POSITION_CORRECT="1"
-    BOARD[$INPUT - 1]="${PLAYER}"
+    if ! [[ "${INPUT}" =~ ^[0-9]$ ]]; then
+      echo "Incorrect position! You have to enter correct cell position."
+    elif ! [[ "${BOARD[${INPUT} - 1]}" == " " ]]; then
+      echo "Incorrect position! You can not chose already selected position."
+    else
+      IS_NEXT_POSITION_CORRECT="1"
+      BOARD[$INPUT - 1]="${PLAYER}"
+    fi
   done
 }
 
